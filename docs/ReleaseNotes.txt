@@ -1,0 +1,11 @@
+iTunesExport-Scala - Eric Daugherty
+eric@ericdaugherty.com
+http://www.ericdaugherty.com/dev/itunesexport/scala/
+--------------------------------------------
+
+Revision History
+----------------
+
+0.1 - Released TBD
+
+Initial Release - Includes only M3u Export from command line.
