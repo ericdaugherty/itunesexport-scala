@@ -1,0 +1,184 @@
+<?xml version="1.0"?>
+
+<project default="compile" basedir=".">
+
+  <property name="version" value="0.1" />
+
+  <property name="sources.main.dir" value="src/main/scala" />
+  <property name="sources.test.dir" value="src/test/scala" />
+  
+  <property name="build.dir" value="build" />
+  <property name="build.main.dir" value="build\main" />
+  <property name="build.test.dir" value="build\test" />
+  <property name="build.jar.dir" value="build\jar" />
+  <property name="build.release.dir" value="build\release" />
+  
+  <property name="docs.dir" value="build/docs" />
+  
+  <property name="lib.scala-library" value="lib/scala-library.jar" />
+  <property name="lib.scalatest" value="lib/scalatest-0.9.5.jar" />
+  
+  <path id="build.main.classpath">
+    <pathelement location="${lib.scala-library}" />
+    <pathelement location="${build.dir}/main" />
+  </path>
+  
+  <path id="test.classpath">
+    <pathelement location="${lib.scalatest}"/>
+    <pathelement location="${lib.scala-library}"/>
+    <pathelement location="${build.dir}/main"   />
+  </path>
+
+  
+  
+  <!--
+     | ************************************************************
+     |
+     | Init
+     |
+     | ************************************************************
+  -->
+  
+  <!-- Setup the Scala Task Defs -->
+  <target name="init">    
+    <taskdef resource="scala/tools/ant/antlib.xml">
+      <classpath>
+        <pathelement location="${lib.scala-library}" />
+        <pathelement location="lib/scala-compiler.jar" />
+      </classpath>
+    </taskdef>
+  </target>
+  
+  <!-- Setup the ScalaTest Task Defs -->
+  <target name="init.test">
+    <taskdef name="scalatest" classname="org.scalatest.tools.ScalaTestTask">
+      <classpath refid="test.classpath"/>
+    </taskdef>
+   </target>
+  
+  <!--
+     | ************************************************************
+     |
+     | Compile
+     |
+     | ************************************************************
+  -->
+  
+  <target name="compile" depends="init">
+    <mkdir dir="${build.dir}\main"   />
+    <scalac srcdir="${sources.main.dir}"
+            destdir="${build.dir}/main"
+            classpathref="build.main.classpath"
+            force="changed">
+      <include name="**/*.scala" />
+    </scalac>
+  </target>
+  
+  <target name="compile.test" depends="init, compile">
+    <mkdir dir="${build.dir}\test"   />
+    <scalac srcdir="${sources.test.dir}"
+            destdir="${build.dir}/test"
+            classpathref="test.classpath"
+            force="changed">
+      <include name="**/*.scala" />
+    </scalac>
+  </target>
+
+  <!--
+     | ************************************************************
+     |
+     | Test
+     |
+     | ************************************************************
+  -->
+  
+  <target name="test" depends="init.test, clean, compile, compile.test">
+    <scalatest>
+      <runpath>
+        <pathelement path="${test.classpath}" />
+        <pathelement location="${build.dir}\test"/>
+      </runpath>
+      <suite classname="com.ericdaugherty.itunesexport.TestSuite"/>
+    </scalatest>
+  </target>
+  
+  <!--
+     | ************************************************************
+     |
+     | JAR
+     |
+     | ************************************************************
+  -->
+  
+  <target name="jar" depends="clean, compile">
+    <mkdir dir="${build.jar.dir}" />
+    <copy file="${lib.scala-library}" todir="${build.jar.dir}" />
+    <jar destfile="${build.jar.dir}\itunesexport.jar" 
+         basedir="${build.main.dir}" 
+         includes="**/*.class">
+      <manifest>
+        <attribute name="Main-Class" value="com.ericdaugherty.itunesexport.console.Export" />
+        <attribute name="Class-Path" value="scala-library.jar" />
+      </manifest>
+    </jar>
+  </target>
+  
+  <!--
+     | ************************************************************
+     |
+     | Docs
+     |
+     | ************************************************************
+  -->
+  
+  <target name="docs" depends="init">
+    <mkdir dir="${docs.dir}" />    
+    <scaladoc
+      srcdir="${sources.main.dir}"
+      destdir="${docs.dir}"
+      deprecation="yes" unchecked="yes"
+      windowtitle="iTunes Export Documentation"
+      doctitle="&lt;div&gt;iTunesExport 0.1.0&lt;/div&gt;"
+      classpathref="build.main.classpath">
+        <include name="**/*.scala"   />
+    </scaladoc>
+  </target>
+  
+  <!--
+     | ************************************************************
+     |
+     | Release
+     |
+     | ************************************************************
+  -->
+
+  <target name="release" depends="jar, docs">
+    <mkdir dir="${build.release.dir}" />
+    <zip destfile="${build.release.dir}\iTunesExportScala-${version}.zip">
+      <fileset dir="${build.jar.dir}" includes="**/*" />
+      <fileset dir="docs" />
+    </zip>
+    <zip destfile="${build.release.dir}\iTunesExportScala-src-${version}.zip">
+      <fileset dir=".">
+        <include name="docs/**/*" />
+        <include name="lib/**/*" />
+        <include name="src/**/*" />
+        <include name="*.pom" />
+        <include name="*.xml" />
+      </fileset>
+    </zip>
+  </target>
+
+  <!--
+     | ************************************************************
+     |
+     | Clean
+     |
+     | ************************************************************
+  -->
+  
+  <target name="clean">
+    <delete dir="${build.dir}" />
+  </target>
+  
+</project>
