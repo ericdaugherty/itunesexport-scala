@@ -25,6 +25,7 @@ class Track(xml: Node) extends PListParser {
   val fileType: String = getPListString("Kind")
   val fileSize: Double = getPListDouble("Size")
   val time: Double = getPListDouble("Total Time")
+  val timeInSeconds = (time/1000).toInt
   val dateModified: Date = getPListDate("Date Modified")
   val dateAdded: Date = getPListDate("Date Added")
   val bitRate: Double = getPListDouble("Bit Rate")

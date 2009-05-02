@@ -6,6 +6,10 @@ http://www.ericdaugherty.com/dev/itunesexport/scala/
 Revision History
 ----------------
 
-0.1 - Released TBD
+0.2 - Released TBD
 
-Initial Release - Includes only M3u Export from command line.
+Added support for Extended M3U, WPL, and ZPL playlist formats.
+
+0.1 - Released 2009-04-25
+
+Initial Release - Includes only M3U Export from command line.
