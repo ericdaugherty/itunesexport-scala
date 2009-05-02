@@ -1,7 +1,7 @@
 package com.ericdaugherty.itunesexport.formatter
 
-
 import java.io.{File, PrintWriter}
+import java.text.MessageFormat
 import parser.Playlist
 
 /**
@@ -9,12 +9,12 @@ import parser.Playlist
  *
  * @author Eric Daugherty
  */
-class M3UFormatter extends Formatter {
+class M3UFormatter extends Formatter with Version {
 
   def writePlaylist(directory: String, playlist: Playlist) {
-
     // Write out each track using a PrintWriter
-    withPrintWriter(new File(directory, parseFileName(playlist) + ".m3u")) { writer =>
+    withPrintWriter(new File(directory, parseFileName(playlist) + ".m3u")) { writer =>      
+      writer.println(MessageFormat.format("#Playlist: '{0}' exported by iTunesExport-Scala v{1} http://www.ericdaugherty.com/dev/itunesexport/scala/", playlist.name, version))
       playlist.tracks.foreach(track => writer.println(parseLocation(track)))      
     }
   }

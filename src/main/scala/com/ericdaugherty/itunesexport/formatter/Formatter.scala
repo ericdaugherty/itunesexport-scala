@@ -24,12 +24,12 @@ trait Formatter {
   }
 
   /** Helper method to enable save usage of PrintWiter.  Loan Pattern.  Defautls to UTF-8 encoding. */
-  def withPrintWriter(file: File)(op: PrintWriter => Unit) { withPrintWriter(file, "UTF-8")(op) }
+  def withPrintWriter(file: File)(func: PrintWriter => Unit) { withPrintWriter(file, "UTF8")(func) }
 
   /** Helper method to enable save usage of PrintWiter.  Loan Pattern */
   def withPrintWriter(file: File, encoding: String)(func: PrintWriter => Unit) {
 
-    val writer = new PrintWriter(file, "UTF-8")
+    val writer = new PrintWriter(file, encoding)
     try {
       func(writer)
     }
