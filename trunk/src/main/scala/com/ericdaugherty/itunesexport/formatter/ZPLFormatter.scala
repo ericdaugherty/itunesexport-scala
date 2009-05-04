@@ -10,7 +10,7 @@ import parser.{Track, Playlist}
  *
  * @author Eric Daugherty
  */
-class ZPLFormatter extends Formatter {
+class ZPLFormatter(settings: FormatterSettings) extends Formatter(settings) {
 
   def writePlaylist(directory: String, playlist: Playlist) {
     // Write out each track using a PrintWriter

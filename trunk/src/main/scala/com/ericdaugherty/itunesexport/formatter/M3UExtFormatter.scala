@@ -15,7 +15,7 @@ import parser.Playlist
  *
  * @author Eric Daugherty
  */
-class M3UExtFormatter extends Formatter {
+class M3UExtFormatter(settings: FormatterSettings) extends Formatter(settings) {
 
   def writePlaylist(directory: String, playlist: Playlist) {
     // Write out each track using a PrintWriter

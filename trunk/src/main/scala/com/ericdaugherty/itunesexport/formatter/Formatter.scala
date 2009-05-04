@@ -8,18 +8,30 @@ import parser.{Track, Playlist}
  *
  * @author Eric Daugherty
  */
-trait Formatter {
+abstract class Formatter(settings: FormatterSettings) {
+
+  /** Indicates whether the locationPrefix needs to be parsed */
+  val replacePrefix  = !(parseLocation(settings.musicPath) == parseLocation(settings.musicPathOld))
+  val parsedMusicPathOld = parseLocation(settings.musicPathOld)
 
   /** Converts the directory and playlist name into a valid file name */
   def parseFileName(playlist: Playlist ) = playlist.name.replaceAll("""[:<>|/\\\?\*\"]""", "_")
 
   /** Converts the default track location to a system specific and cleaned version */
-  def parseLocation(track: Track) = {
-    val location = track.location
+  def parseLocation(track: Track) : String = {
+    val location = parseLocation(track.location)
+    if(replacePrefix) location.replace(parsedMusicPathOld, settings.musicPath) else location
+  }
+
+  /** Overloaded parseLocation that handles all logic other than replacing the prefix */
+  def parseLocation(location: String) : String = {
     // First handle UNC paths, then normal paths, pass results to decodeUrl
     decodeUrl(
-      (if(location(18) == ':') location.replaceAll("file://localhost/", "")
-      else location.replaceAll("file://localhost", "")).replace('/', File.separatorChar)
+      (if(location.contains("localhost")) {
+        (if(location(18) == ':') location.replaceAll("file://localhost/", "")
+        else location.replaceAll("file://localhost", ""))
+      }
+      else location).replace('/', File.separatorChar)
     )
   }
 
