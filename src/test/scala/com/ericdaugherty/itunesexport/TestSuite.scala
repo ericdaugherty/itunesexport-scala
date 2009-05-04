@@ -13,6 +13,6 @@ class TestSuite extends SuperSuite (
       new parser.TrackTest(),
       new parser.PlaylistTest(),
       new parser.LibraryTest(),
-      new console.ExportTest()
+      new console.ConsoleExportTest()
     )
 )

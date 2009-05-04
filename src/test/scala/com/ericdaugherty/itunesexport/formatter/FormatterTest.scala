@@ -15,37 +15,62 @@ import org.scalatest.FunSuite
 class FormatterTest extends FunSuite {
 
   /** Simple class to allow us to test the Formatter trait */
-  class TestFormatter extends Formatter {
+  class TestFormatter(settings: FormatterSettings) extends Formatter(settings) {
     def writePlaylist(directory: String, playlist:Playlist)  {
       ""
     }
   }
 
+  val simpleExportSettings = new FormatterSettings { val musicPath = ""; val musicPathOld = "" }
+
+  test("replacePrefix") {
+    val formatter = new TestFormatter(new FormatterSettings { val musicPath = "a"; val musicPathOld = "a" })
+    val formatter2 = new TestFormatter(new FormatterSettings { val musicPath = "a"; val musicPathOld = "b" })
+    val formatter3 = new TestFormatter(new FormatterSettings { val musicPath = """M:\Music\"""; val musicPathOld = "file://localhost/M:/Music/" })
+    val formatter4 = new TestFormatter(new FormatterSettings { val musicPath = """M:/Music/"""; val musicPathOld = "file://localhost/M:/Music/" })
+    val formatter5 = new TestFormatter(new FormatterSettings { val musicPath = """\\MyServer\Music\"""; val musicPathOld = "file://localhost//MyServer/Music/" })
+
+    assert(!formatter.replacePrefix)
+    assert(formatter2.replacePrefix)
+    assert(!formatter3.replacePrefix)
+    assert(!formatter4.replacePrefix)
+    assert(!formatter5.replacePrefix)
+  }
+
   test("parseFileName") {
-    val formatter = new TestFormatter()
+    val formatter = new TestFormatter(simpleExportSettings)
 
     assert(formatter.parseFileName(playlist1) === "__Hel_o_World_How_Are_You__")
   }
 
   test("parseLocation - Windows") {
-    val formatter = new TestFormatter()
+    val formatter = new TestFormatter(simpleExportSettings)
 
     val track = new Track(xml.XML.loadString(trackLocationString))
     assert(formatter.parseLocation(track) === "M:/Music/38 Special/Unknown Album/Caught Up In You.mp3".replace('/', File.separatorChar))
   }
 
   test("parseLocation - Windows UNC") {
-    val formatter = new TestFormatter()
+    val formatter = new TestFormatter(simpleExportSettings)
 
     val track = new Track(xml.XML.loadString(trackLocation2String))
     assert(formatter.parseLocation(track) === "//MyServer/Music/38 Special/Unknown Album/Caught Up In You.mp3".replace('/', File.separatorChar))
   }
 
   test("parseLocation - OS X") {
-    val formatter = new TestFormatter()
+    val formatter = new TestFormatter(simpleExportSettings)
 
     val track = new Track(xml.XML.loadString(trackLocation3String))
     assert(formatter.parseLocation(track) === "/Users/Me/Music/38 Special/Unknown Album/Caught Up In You.mp3".replace('/', File.separatorChar))
+  }
+
+  test("parseLocation - Prefix") {
+    val formatter1 = new TestFormatter(new FormatterSettings { val musicPath = """Z:\MyMusic"""; val musicPathOld = "M:/Music" })
+
+    val track1 = new Track(xml.XML.loadString(trackLocationString))
+
+    assert(formatter1.replacePrefix)
+    assert(formatter1.parseLocation(track1) === "Z:/MyMusic/38 Special/Unknown Album/Caught Up In You.mp3".replace('/', File.separatorChar))
   }
 
   //***************************************************************************

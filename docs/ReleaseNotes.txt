@@ -10,6 +10,8 @@ Revision History
 
 Added support for Extended M3U, WPL, and ZPL playlist formats.
 
+Added ability to change file location prefix from iTunes Library Default or override arbitrary prefix (musicPath)
+
 0.1 - Released 2009-04-25
 
 Initial Release - Includes only M3U Export from command line.

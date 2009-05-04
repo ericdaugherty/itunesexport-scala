@@ -6,12 +6,14 @@ import xml.{Node,XML}
 
 /**
  * Helper Object to handle overloaded constructor logic.
+ *
+ * @author Eric Daugherty
  */
 object Library {
 
   /**
    * Parser method to load the iTunes XML file into a Node.  This is neccessary
-   * because we need to strip out the Schema to avoid the external lookup.  This is a HACK
+   * because we need to strip out the Schema to avoid the external lookup.  This is a HACK.
    * TODO: Disable validation on XML loadFile method
    */
   def parsePListXML(fileName: String) : Node = {

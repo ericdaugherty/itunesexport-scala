@@ -9,7 +9,7 @@ import parser.Playlist
  *
  * @author Eric Daugherty
  */
-class M3UFormatter extends Formatter with Version {
+class M3UFormatter(settings: FormatterSettings) extends Formatter(settings) with Version {
 
   def writePlaylist(directory: String, playlist: Playlist) {
     // Write out each track using a PrintWriter

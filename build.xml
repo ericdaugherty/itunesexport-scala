@@ -117,7 +117,7 @@
          basedir="${build.main.dir}" 
          includes="**/*.class">
       <manifest>
-        <attribute name="Main-Class" value="com.ericdaugherty.itunesexport.console.Export" />
+        <attribute name="Main-Class" value="com.ericdaugherty.itunesexport.console.ConsoleExport" />
         <attribute name="Class-Path" value="scala-library.jar" />
       </manifest>
     </jar>
