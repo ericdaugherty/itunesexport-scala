@@ -41,14 +41,10 @@ object ConsoleExport extends Version {
     // Parse other input parameters
     val playlistType = getParameter(args, "playlistType", "m3u").toLowerCase()
 
-
-    val amusicPath = getParameter(args, "musicPath", library.musicFolder)
-    val amusicPathOld = getParameter(args, "musicPathOld", library.musicFolder)
-
-
+    // Initialize settings container for Formatters
     val settings = new FormatterSettings() {
-      val musicPath = amusicPath
-      val musicPathOld = amusicPathOld
+      val musicPath = getParameter(args, "musicPath", library.musicFolder)
+      val musicPathOld = getParameter(args, "musicPathOld", library.musicFolder)
     }
 
     val formatter = playlistType match {
