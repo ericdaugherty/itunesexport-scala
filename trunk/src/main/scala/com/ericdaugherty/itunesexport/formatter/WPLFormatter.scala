@@ -12,9 +12,9 @@ import parser.{Track, Playlist}
  */
 class WPLFormatter(settings: FormatterSettings) extends Formatter(settings) {
 
-  def writePlaylist(directory: String, playlist: Playlist) {
+  def writePlaylist(playlist: Playlist) {
     // Write out each track using a PrintWriter
-    withPrintWriter(new File(directory, parseFileName(playlist) + ".wpl")) { writer =>
+    withPrintWriter(new File(settings.outputDirectory, parseFileName(playlist) + ".wpl"), settings) { writer =>
       writer.println("<?wpl version=\"1.0\"?>")
       writer.println(<smil>
   <head>

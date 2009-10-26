@@ -17,12 +17,13 @@ import parser.Playlist
  */
 class M3UExtFormatter(settings: FormatterSettings) extends Formatter(settings) {
 
-  def writePlaylist(directory: String, playlist: Playlist) {
+  def writePlaylist(playlist: Playlist) {
     // Write out each track using a PrintWriter
-    withPrintWriter(new File(directory, parseFileName(playlist) + ".m3u")) { writer =>
+    val extension = if(settings.useM3U8) ".m3u8" else ".m3u"
+    withPrintWriter(new File(settings.outputDirectory, parseFileName(playlist) + extension), settings) { writer =>
       writer.println("#EXTM3U")
 
-      playlist.tracks.foreach(track => {
+      filterTracks(playlist.tracks, settings).foreach(track => {
         writer.println(format("#EXTINF:{0},{1} - {2}", track.timeInSeconds.toString, track.artist, track.name))
         writer.println(parseLocation(track))
       })

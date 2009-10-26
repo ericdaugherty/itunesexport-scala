@@ -6,5 +6,5 @@ package com.ericdaugherty.itunesexport
  * @author Eric Daugherty
  */
 trait Version {
-  val version = "0.1"
+  val version = "0.3"
 }

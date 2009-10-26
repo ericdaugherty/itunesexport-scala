@@ -2,7 +2,7 @@
 
 <project default="compile" basedir=".">
 
-  <property name="version" value="0.1" />
+  <property name="version" value="0.2" />
 
   <property name="sources.main.dir" value="src/main/scala" />
   <property name="sources.test.dir" value="src/test/scala" />

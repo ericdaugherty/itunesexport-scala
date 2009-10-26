@@ -41,7 +41,7 @@ trait PListParser {
   }
 
   /** Abstract method the subclass needs to implement */
-    def getPListValue(key: String, default: Any) : Any
+  def getPListValue(key: String, default: Any) : Any
 
   /** Type generic way to get values.  Only works if you pass a default, not sure how to handle default values in this mannor. */
   def getValue[T](key: String, default: T) : T = getPListValue(key, default).asInstanceOf[T]
@@ -60,5 +60,5 @@ trait PListParser {
   
   def getPListDouble(key: String) : Double = getValue(key, 0.asInstanceOf[Double])
   
-  def getPListString(key: String) : String = getValue(key, "")
+  def getPListString(key: String) : String = getValue(key, "").trim()
 }
