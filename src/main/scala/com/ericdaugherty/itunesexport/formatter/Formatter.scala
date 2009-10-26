@@ -36,13 +36,18 @@ abstract class Formatter(settings: FormatterSettings) {
   }
 
   /** Helper method to enable save usage of PrintWiter.  Loan Pattern.  Defautls to UTF-8 encoding. */
-  def withPrintWriter(file: File)(func: PrintWriter => Unit) { withPrintWriter(file, "UTF8")(func) }
+  def withPrintWriter(file: File, settings:FormatterSettings)(func: PrintWriter => Unit) { withPrintWriter(file, settings, "UTF8")(func) }
 
   /** Helper method to enable save usage of PrintWiter.  Loan Pattern */
-  def withPrintWriter(file: File, encoding: String)(func: PrintWriter => Unit) {
+  def withPrintWriter(file: File, settings:FormatterSettings, encoding: String)(func: PrintWriter => Unit) {
 
     val writer = new PrintWriter(file, encoding)
     try {
+      if(settings.includeUTFBOM) {
+        writer.write(239)
+        writer.write(187)
+        writer.write(191)
+      }
       func(writer)
     }
     finally {
@@ -50,13 +55,35 @@ abstract class Formatter(settings: FormatterSettings) {
     }
   }
 
-  def writePlaylist(directory: String, playlist:Playlist) : Unit
+  def writePlaylist(playlist:Playlist) : Unit
+
+  def filterTracks(tracks:Seq[Track], settings:FormatterSettings) : Seq[Track] = {
+    tracks.filter(track => includeTrack(track, settings))
+  }
+
+  def includeTrack(track:Track, settings:FormatterSettings) : Boolean = {
+    // Exclude songs that are disabled (unchecked) unless the includeUnchecked override is set.
+    if(settings.includeDisabled || !track.disabled)
+    {
+      // Based on the file type determine if this song should be included.
+      settings.fileType match {
+        case "MP3" => track.fileType == "MPEG audio file"
+        case "MP3M4A" => !track.protectedTrack
+        case "ALL" => true
+        case _ => true
+      }
+    }
+    else false
+  }
 
   /**
    * Performs a URL Decode to convert %xx into characters.  Many of these are illegal on many file systems
    * but they are all here for completeness and to handle any systems that do have them as legal characters
    */
   private def decodeUrl(url: String) = {
+
+    // TODO: Need to handle UTF-8 Encoded Chars, like %C3%B1 which should be converted to two bytes: C3 and B1
+
     url.replaceAll("%20", " ")
       .replaceAll("%3C", "<")
       .replaceAll("%3E", ">")

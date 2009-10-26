@@ -1,5 +1,7 @@
 package com.ericdaugherty.itunesexport.parser
 
+import java.io.File
+
 import io.Source
 import xml.{Node,XML}
 
@@ -10,6 +12,8 @@ import xml.{Node,XML}
  * @author Eric Daugherty
  */
 object Library {
+
+  val defaultLocation = System.getProperty("user.home") + "/Music/iTunes/iTunes Music Library.xml"
 
   /**
    * Parser method to load the iTunes XML file into a Node.  This is neccessary
@@ -33,6 +37,9 @@ class Library(libraryXml: Node) extends PListParser {
 
   /** Constructor that takes a file path */
   def this(libraryXmlFilePath: String) = this(Library.parsePListXML(libraryXmlFilePath))
+
+  /** Constructor that takes a file */
+  def this(libraryXmlFile: File) = this(libraryXmlFile.getPath)
 
   // Parse the XML into a pListMap
   private val pListMap : Map[String,Any] = parsePList((libraryXml \ "dict")(0))

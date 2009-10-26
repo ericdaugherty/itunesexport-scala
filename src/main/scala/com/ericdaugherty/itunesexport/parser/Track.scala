@@ -37,6 +37,7 @@ class Track(xml: Node) extends PListParser {
   val location: String = getPListString("Location")
 //  val inLibrary: Boolean = getPListBoolean("Disabled", true)
   val disabled = getValue("Disabled", false)
+  val protectedTrack : Boolean = getValue("Protected", false)
 
   override def toString = {
     "Track ID: " + trackId + "\n" +

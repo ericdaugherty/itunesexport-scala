@@ -6,7 +6,21 @@ http://www.ericdaugherty.com/dev/itunesexport/scala/
 Revision History
 ----------------
 
-0.2 - Released TBD
+x.x - Released y
+
+Added support for MPL playlist format.
+
+Added (undocumented) includeUTFBOM feature.  Not sure it is correct.
+
+Added support of .m3u8 extensions.
+
+Added support to filter disabled tracks and by track file type (mp3, m4a, etc).
+
+Improved console help display (support -? and -h).
+
+Added ability to specify playlists to include or exclude from import.
+
+0.2 - Released 2009-05-09
 
 Added support for Extended M3U, WPL, and ZPL playlist formats.
 

@@ -16,19 +16,19 @@ class FormatterTest extends FunSuite {
 
   /** Simple class to allow us to test the Formatter trait */
   class TestFormatter(settings: FormatterSettings) extends Formatter(settings) {
-    def writePlaylist(directory: String, playlist:Playlist)  {
+    def writePlaylist(playlist:Playlist)  {
       ""
     }
   }
 
-  val simpleExportSettings = new FormatterSettings { val musicPath = ""; val musicPathOld = "" }
+  val simpleExportSettings = new FormatterSettings { val outputDirectory = new File(""); val musicPath = ""; val musicPathOld = "" }
 
   test("replacePrefix") {
-    val formatter = new TestFormatter(new FormatterSettings { val musicPath = "a"; val musicPathOld = "a" })
-    val formatter2 = new TestFormatter(new FormatterSettings { val musicPath = "a"; val musicPathOld = "b" })
-    val formatter3 = new TestFormatter(new FormatterSettings { val musicPath = """M:\Music\"""; val musicPathOld = "file://localhost/M:/Music/" })
-    val formatter4 = new TestFormatter(new FormatterSettings { val musicPath = """M:/Music/"""; val musicPathOld = "file://localhost/M:/Music/" })
-    val formatter5 = new TestFormatter(new FormatterSettings { val musicPath = """\\MyServer\Music\"""; val musicPathOld = "file://localhost//MyServer/Music/" })
+    val formatter = new TestFormatter(new FormatterSettings { val outputDirectory = new File(""); val musicPath = "a"; val musicPathOld = "a" })
+    val formatter2 = new TestFormatter(new FormatterSettings { val outputDirectory = new File(""); val musicPath = "a"; val musicPathOld = "b" })
+    val formatter3 = new TestFormatter(new FormatterSettings { val outputDirectory = new File(""); val musicPath = """M:\Music\"""; val musicPathOld = "file://localhost/M:/Music/" })
+    val formatter4 = new TestFormatter(new FormatterSettings { val outputDirectory = new File(""); val musicPath = """M:/Music/"""; val musicPathOld = "file://localhost/M:/Music/" })
+    val formatter5 = new TestFormatter(new FormatterSettings { val outputDirectory = new File(""); val musicPath = """\\MyServer\Music\"""; val musicPathOld = "file://localhost//MyServer/Music/" })
 
     assert(!formatter.replacePrefix)
     assert(formatter2.replacePrefix)
@@ -65,7 +65,7 @@ class FormatterTest extends FunSuite {
   }
 
   test("parseLocation - Prefix") {
-    val formatter1 = new TestFormatter(new FormatterSettings { val musicPath = """Z:\MyMusic"""; val musicPathOld = "M:/Music" })
+    val formatter1 = new TestFormatter(new FormatterSettings { val outputDirectory = new File(""); val musicPath = """Z:\MyMusic"""; val musicPathOld = "M:/Music" })
 
     val track1 = new Track(xml.XML.loadString(trackLocationString))
 

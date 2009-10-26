@@ -1,1 +1,1 @@
-java -Xmx256M -jar sbt-launcher-0.4.5.jar %*
+java -Xmx256M -jar project\sbt-launcher-0.4.6.jar %*

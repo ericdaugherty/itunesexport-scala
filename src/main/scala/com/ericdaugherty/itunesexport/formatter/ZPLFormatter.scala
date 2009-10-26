@@ -12,9 +12,9 @@ import parser.{Track, Playlist}
  */
 class ZPLFormatter(settings: FormatterSettings) extends Formatter(settings) {
 
-  def writePlaylist(directory: String, playlist: Playlist) {
+  def writePlaylist(playlist: Playlist) {
     // Write out each track using a PrintWriter
-    withPrintWriter(new File(directory, parseFileName(playlist) + ".zpl")) { writer =>
+    withPrintWriter(new File(settings.outputDirectory, parseFileName(playlist) + ".zpl"), settings) { writer =>
       writer.println("<?zpl version=\"1.0\"?>")
       writer.println(<smil>
   <head>
