@@ -1,7 +1,36 @@
 package com.ericdaugherty.itunesexport.formatter
 
-import java.io.{PrintWriter, File}
+import java.io.{FileInputStream, FileOutputStream, PrintWriter, File}
+import java.nio.channels.FileChannel
 import parser.{Track, Playlist}
+import Formatter._
+import java.net.URLDecoder
+
+
+object Formatter {
+
+  /** Overloaded parseLocation that handles all logic other than replacing the prefix */
+  def parseLocation(location: String) : String = {
+    // First handle UNC paths, then normal paths, pass results to decodeUrl
+    decodeUrl(
+      (if(location.contains("localhost")) {
+        (if(location(18) == ':') location.replaceAll("file://localhost/", "")
+        else location.replaceAll("file://localhost", ""))
+      }
+      else location).replace('/', File.separatorChar)
+    )
+  }
+  
+  /**
+   *  Performs a URL Decode to convert %xx into characters.  Many of these are illegal on many file systems
+   * but they are all here for completeness and to handle any systems that do have them as legal characters
+   */
+  private def decodeUrl(url: String) = {
+    // iTunes does not actually URL Encode the + char, so when URLDecoder decodes it,
+    // it is replaced with a space.  Replace all + with encoded versions before decoding.
+    URLDecoder.decode(url.replaceAll("\\+", "%2b"), "UTF-8")
+  }
+}
 
 /**
  * Trait containing common interface and methods for all Playlist Formatters
@@ -14,25 +43,15 @@ abstract class Formatter(settings: FormatterSettings) {
   val replacePrefix  = !(parseLocation(settings.musicPath) == parseLocation(settings.musicPathOld))
   val parsedMusicPathOld = parseLocation(settings.musicPathOld)
 
-  /** Converts the directory and playlist name into a valid file name */
-  def parseFileName(playlist: Playlist ) = playlist.name.replaceAll("""[:<>|/\\\?\*\"]""", "_")
+  var fileIndex:Int = 0;
+  
+  /** Removes non-alphanumeric (A-Z 0-9) characters from playlist names and replaces with underscore (_) */
+  def parseFileName(playlist: Playlist) = playlist.name.replaceAll("""[^\s\w\-\.\[\]=$&{}\xc0-\xff]""", "_")
 
   /** Converts the default track location to a system specific and cleaned version */
-  def parseLocation(track: Track) : String = {
+  def parseTrack(track: Track) : String = {
     val location = parseLocation(track.location)
     if(replacePrefix) location.replace(parsedMusicPathOld, settings.musicPath) else location
-  }
-
-  /** Overloaded parseLocation that handles all logic other than replacing the prefix */
-  def parseLocation(location: String) : String = {
-    // First handle UNC paths, then normal paths, pass results to decodeUrl
-    decodeUrl(
-      (if(location.contains("localhost")) {
-        (if(location(18) == ':') location.replaceAll("file://localhost/", "")
-        else location.replaceAll("file://localhost", ""))
-      }
-      else location).replace('/', File.separatorChar)
-    )
   }
 
   /** Helper method to enable save usage of PrintWiter.  Loan Pattern.  Defautls to UTF-8 encoding. */
@@ -55,6 +74,14 @@ abstract class Formatter(settings: FormatterSettings) {
     }
   }
 
+  def exportPlaylist(playlist:Playlist) : Unit = {
+
+    // Reset the file index if we are doing playlist file copy.
+    if(settings.copy.equals("PLAYLIST")) fileIndex = 0;
+
+    writePlaylist(playlist)
+  }
+
   def writePlaylist(playlist:Playlist) : Unit
 
   def filterTracks(tracks:Seq[Track], settings:FormatterSettings) : Seq[Track] = {
@@ -67,7 +94,8 @@ abstract class Formatter(settings: FormatterSettings) {
     {
       // Based on the file type determine if this song should be included.
       settings.fileType match {
-        case "MP3" => track.fileType == "MPEG audio file"
+//        case "MP3" => track.fileType == "MPEG audio file" || track.fileType == "MPEG-Audiodatei"
+        case "MP3" => track.location.substring(track.location.length -4 ) == ".mp3"
         case "MP3M4A" => !track.protectedTrack
         case "ALL" => true
         case _ => true
@@ -76,35 +104,51 @@ abstract class Formatter(settings: FormatterSettings) {
     else false
   }
 
+  def copyFiles(track:Track, playlist:Playlist) : String = {
+    // Quick return if 'NONE'
+    // TODO: Find faster solution for this.  Should be the primary use case.
+    if(settings.copy == "NONE") return parseTrack(track).replace(File.separator, settings.separator);
+
+    val sourceFile = new File(parseTrack(track))
+    val filePrefix = if((settings.copy.equals("PLAYLIST") || settings.copy.equals("FLAT")) && settings.addIndex) {
+      fileIndex = fileIndex + 1;
+      String.format("%05d-", int2Integer(fileIndex))
+    } else ""
+
+    val targetFile : File = settings.copy match {
+      case "PLAYLIST" => new File(new File(settings.outputDirectory, playlist.name), filePrefix + sourceFile.getName)
+      case "ITUNES" => new File(settings.outputDirectory, parseTrack(track).replace(parseLocation(settings.musicPathOld), ""))
+      case "FLAT" => new File(settings.outputDirectory, filePrefix + sourceFile.getName)
+    }
+
+    if(!targetFile.exists)
+    {
+      copy(sourceFile, targetFile)
+    }
+
+    targetFile.getPath.replace(settings.outputDirectory.getPath + File.separator, "").replace(File.separator, settings.separator);
+  }
+
   /**
-   * Performs a URL Decode to convert %xx into characters.  Many of these are illegal on many file systems
-   * but they are all here for completeness and to handle any systems that do have them as legal characters
+   *  Copy a file.
    */
-  private def decodeUrl(url: String) = {
+  private def copy(source:File, destination:File) : Unit = {
 
-    // TODO: Need to handle UTF-8 Encoded Chars, like %C3%B1 which should be converted to two bytes: C3 and B1
+    destination.getParentFile.mkdirs
 
-    url.replaceAll("%20", " ")
-      .replaceAll("%3C", "<")
-      .replaceAll("%3E", ">")
-      .replaceAll("%23", "#")
-      .replaceAll("%25", "%")
-      .replaceAll("%7B", "{")
-      .replaceAll("%7D", "}")
-      .replaceAll("%7C", "")
-      .replaceAll("%5C", "\\")
-      .replaceAll("%5E", "^")
-      .replaceAll("%7E", "~")
-      .replaceAll("%5B", "[")
-      .replaceAll("%5D", "]")
-      .replaceAll("%60", "`")
-      .replaceAll("%3B", ";")
-      .replaceAll("%2F", "/")
-      .replaceAll("%3F", "?")
-      .replaceAll("%3A", ":")
-      .replaceAll("%40", "@")
-      .replaceAll("%3D", "=")
-      .replaceAll("%26", "&")
-      .replaceAll("%24", "$")
+    var in : FileChannel = null;
+    var out : FileChannel = null;
+    try
+    {
+      in = new FileInputStream(source).getChannel();
+      out = new FileOutputStream(destination).getChannel();
+      in.transferTo(0, in.size(), out);
+    }
+    finally {
+      if (in != null)
+        in.close();
+      if (out != null)
+        out.close();
+    }
   }
 }

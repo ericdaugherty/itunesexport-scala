@@ -21,14 +21,14 @@ class FormatterTest extends FunSuite {
     }
   }
 
-  val simpleExportSettings = new FormatterSettings { val outputDirectory = new File(""); val musicPath = ""; val musicPathOld = "" }
+  val simpleExportSettings = new FormatterSettings { val outputDirectory = new File(""); val musicPath = ""; val musicPathOld = ""; val includeUTFBOM = false; val useM3U8 = false; val fileType = ""; val includeDisabled = false; val copy = "" }
 
   test("replacePrefix") {
-    val formatter = new TestFormatter(new FormatterSettings { val outputDirectory = new File(""); val musicPath = "a"; val musicPathOld = "a" })
-    val formatter2 = new TestFormatter(new FormatterSettings { val outputDirectory = new File(""); val musicPath = "a"; val musicPathOld = "b" })
-    val formatter3 = new TestFormatter(new FormatterSettings { val outputDirectory = new File(""); val musicPath = """M:\Music\"""; val musicPathOld = "file://localhost/M:/Music/" })
-    val formatter4 = new TestFormatter(new FormatterSettings { val outputDirectory = new File(""); val musicPath = """M:/Music/"""; val musicPathOld = "file://localhost/M:/Music/" })
-    val formatter5 = new TestFormatter(new FormatterSettings { val outputDirectory = new File(""); val musicPath = """\\MyServer\Music\"""; val musicPathOld = "file://localhost//MyServer/Music/" })
+    val formatter = new TestFormatter(new FormatterSettings { val outputDirectory = new File(""); val musicPath = "a"; val musicPathOld = "a"; val includeUTFBOM = false; val useM3U8 = false; val fileType = ""; val includeDisabled = false; val copy = "" })
+    val formatter2 = new TestFormatter(new FormatterSettings { val outputDirectory = new File(""); val musicPath = "a"; val musicPathOld = "b"; val includeUTFBOM = false; val useM3U8 = false; val fileType = ""; val includeDisabled = false; val copy = "" })
+    val formatter3 = new TestFormatter(new FormatterSettings { val outputDirectory = new File(""); val musicPath = """M:\Music\"""; val musicPathOld = "file://localhost/M:/Music/"; val includeUTFBOM = false; val useM3U8 = false; val fileType = ""; val includeDisabled = false; val copy = "" })
+    val formatter4 = new TestFormatter(new FormatterSettings { val outputDirectory = new File(""); val musicPath = """M:/Music/"""; val musicPathOld = "file://localhost/M:/Music/"; val includeUTFBOM = false; val useM3U8 = false; val fileType = ""; val includeDisabled = false; val copy = "" })
+    val formatter5 = new TestFormatter(new FormatterSettings { val outputDirectory = new File(""); val musicPath = """\\MyServer\Music\"""; val musicPathOld = "file://localhost//MyServer/Music/"; val includeUTFBOM = false; val useM3U8 = false; val fileType = ""; val includeDisabled = false; val copy = "" })
 
     assert(!formatter.replacePrefix)
     assert(formatter2.replacePrefix)
@@ -65,7 +65,7 @@ class FormatterTest extends FunSuite {
   }
 
   test("parseLocation - Prefix") {
-    val formatter1 = new TestFormatter(new FormatterSettings { val outputDirectory = new File(""); val musicPath = """Z:\MyMusic"""; val musicPathOld = "M:/Music" })
+    val formatter1 = new TestFormatter(new FormatterSettings { val outputDirectory = new File(""); val musicPath = """Z:\MyMusic"""; val musicPathOld = "M:/Music"; val includeUTFBOM = false; val useM3U8 = false; val fileType = ""; val includeDisabled = false; val copy = "" })
 
     val track1 = new Track(xml.XML.loadString(trackLocationString))
 

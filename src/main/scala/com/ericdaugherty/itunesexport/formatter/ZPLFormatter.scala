@@ -24,7 +24,7 @@ class ZPLFormatter(settings: FormatterSettings) extends Formatter(settings) {
   </head>
   <body>
     <seq>
-    {for(track <- playlist.tracks) yield <media src={parseLocation(track)}></media>}
+    {for(track <- filterTracks(playlist.tracks,settings)) yield <media src={copyFiles(track, playlist)}></media>}
     </seq>
   </body>
 </smil>)

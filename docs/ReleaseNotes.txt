@@ -1,12 +1,60 @@
-iTunesExport-Scala - Eric Daugherty
+iTunesExport - Eric Daugherty
 eric@ericdaugherty.com
-http://www.ericdaugherty.com/dev/itunesexport/scala/
+http://www.ericdaugherty.com/dev/itunesexport/
 --------------------------------------------
 
 Revision History
 ----------------
 
-x.x - Released y
+2.2.2 - Released 6/1/2010
+
+Reduced memory usage.  Changed method to avoid DTD lookups that uses less memory.
+
+2.2.1 - Released 2/12/2010
+
+Enhanced the playlist name filter to include characters from the Latin 1 Supplement Block.
+
+Replaced ad-hoc URL decoding of file paths with URLDecode class.  Now non-ASCII
+characters are handled correctly in file names.
+
+Added 'addIndex' logic.  Now uses incrementing index instead of iTunes Song Index.
+Index is in the order iTunes has the songs in for each playlist.
+
+2.2.0 - Released 01/19/2010
+
+Added option to exclude 'Built In' playlists, including Music, Library, Genius, Movies, etc.
+
+Fixed issue where spaces were being converted to underscores in playlist names.
+
+Fixed issue with 'included file types'.  Only the M3UExt playlist type was correctly filtering
+the file types.  Now all formats are.
+
+Fixed issue with XML validation.  This version no longer attempts to validate the XML
+file (required downloading DTD from apple).
+
+2.1.1 - Released 12/7/2009
+
+Changed logic for including 'MP3' files to use file extension instead of 'Type'.  iTunes uses
+different values for 'Type' based on the local language.
+
+Updated processing of Playlist Name.  All characters are replaced with an underscore (_) 
+except A-Z,a-z,0-9,.[]{}-$=.  This should resolve any issues with playlists containing 
+illegal characters.  This may result in some characters in non-western character sets 
+to be replaced with _.  GUI and Console versions now contain the exact same logic.
+
+2.1 - Released 11/25/2009
+
+Added option to override default path separator character.  Options are Win (\) or Mac (/)
+
+iTunes 9 changed the directory structure of the music folder.  Added logic to include 
+the 'Music' subfolder as part of the Music Path, and therefore exclude it from the 
+iTunes Structure file copy.
+
+Updated Scala to version 2.7.7
+
+2.0 - Released 11/3/2009
+
+Promoted to the main iTunesExport project and updated version number to match.
 
 Added support for MPL playlist format.
 
@@ -19,6 +67,8 @@ Added support to filter disabled tracks and by track file type (mp3, m4a, etc).
 Improved console help display (support -? and -h).
 
 Added ability to specify playlists to include or exclude from import.
+
+Added copy functionality, with PLAYLIST, ITUNES, and FLAT modes.
 
 0.2 - Released 2009-05-09
 

@@ -25,7 +25,7 @@ class M3UExtFormatter(settings: FormatterSettings) extends Formatter(settings) {
 
       filterTracks(playlist.tracks, settings).foreach(track => {
         writer.println(format("#EXTINF:{0},{1} - {2}", track.timeInSeconds.toString, track.artist, track.name))
-        writer.println(parseLocation(track))
+        writer.println(copyFiles(track, playlist))
       })
     }
   }

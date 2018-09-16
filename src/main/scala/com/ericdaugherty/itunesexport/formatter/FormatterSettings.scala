@@ -15,4 +15,7 @@ abstract class FormatterSettings {
   val useM3U8 : Boolean
   val fileType : String
   val includeDisabled : Boolean
+  val copy : String
+  val addIndex : Boolean
+  val separator : String
 }

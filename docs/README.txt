@@ -1,11 +1,11 @@
-iTunesExport-Scala Console Application
-http://www.ericdaugherty.com/dev/itunesexport/scala/
+iTunesExport Console Application
+http://www.ericdaugherty.com/dev/itunesexport/
 
 Usage
 
-iTunes Export is a command line application that uses the Java Runtime Environment (JRE) 
-to execute.  To use it, open a command window to the directory where iTunes Export is
-installed and execute the following command:
+iTunes Export is a command line application that uses the Java Runtime 
+Environment (JRE) to execute.  To use it, open a command window to the 
+directory where iTunes Export is installed and execute the following command:
 
 java -jar itunesexport.jar
 
@@ -18,6 +18,7 @@ line parameter.  Example:
 
 java -jar itunesexport.jar "C:\My Music\iTunes Music Library.xml"
 
-iTunesExport Scala does not yet support many of the advanced features found
-in the normal iTunesExport library.  However, unlike the normal version,
-this version works on OS X.
+iTunesExport supports a variety of command line parameters.  Use the -? or -h 
+parameters to view the available options.  Example:
+
+java -jar itunesexport.jar -h

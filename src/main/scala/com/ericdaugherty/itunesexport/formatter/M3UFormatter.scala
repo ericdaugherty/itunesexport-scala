@@ -16,7 +16,7 @@ class M3UFormatter(settings: FormatterSettings) extends Formatter(settings) with
     val extension = if(settings.useM3U8) ".m3u8" else ".m3u"
     withPrintWriter(new File(settings.outputDirectory, parseFileName(playlist) + extension), settings) { writer =>      
       writer.println(MessageFormat.format("#Playlist: {0}{1}{0} exported by iTunesExport-Scala v{2} http://www.ericdaugherty.com/dev/itunesexport/scala/", "'", playlist.name, version))
-      playlist.tracks.foreach(track => writer.println(parseLocation(track)))      
+      filterTracks(playlist.tracks,settings).foreach(track => writer.println(copyFiles(track, playlist)))      
     }
   }
 }
