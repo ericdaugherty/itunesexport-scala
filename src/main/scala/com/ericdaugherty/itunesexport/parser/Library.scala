@@ -4,7 +4,7 @@ import java.io.File
 
 import xml.{Node,XML}
 
-import formatter.Formatter._
+import com.ericdaugherty.itunesexport.formatter.Formatter._
 
 
 /**

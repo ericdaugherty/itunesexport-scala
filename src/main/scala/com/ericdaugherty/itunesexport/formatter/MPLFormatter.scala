@@ -2,7 +2,7 @@ package com.ericdaugherty.itunesexport.formatter
 
 import java.io.File
 import java.text.MessageFormat.format
-import parser.Playlist
+import com.ericdaugherty.itunesexport.parser.Playlist
 
 /**
  * Generates MPL playlist files.

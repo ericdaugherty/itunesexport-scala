@@ -1,11 +1,12 @@
 package com.ericdaugherty.itunesexport.formatter
 
-import java.io.{FileInputStream, FileOutputStream, PrintWriter, File}
+import java.io.{File, FileInputStream, FileOutputStream, PrintWriter}
 import java.nio.channels.FileChannel
-import parser.{Track, Playlist}
+
 import Formatter._
 import java.net.URLDecoder
 
+import com.ericdaugherty.itunesexport.parser.{Playlist, Track}
 
 object Formatter {
 
@@ -20,7 +21,7 @@ object Formatter {
       else location).replace('/', File.separatorChar)
     )
   }
-  
+
   /**
    *  Performs a URL Decode to convert %xx into characters.  Many of these are illegal on many file systems
    * but they are all here for completeness and to handle any systems that do have them as legal characters

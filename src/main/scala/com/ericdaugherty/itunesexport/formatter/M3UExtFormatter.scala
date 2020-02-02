@@ -1,9 +1,10 @@
 package com.ericdaugherty.itunesexport.formatter
 
-import java.io.File
+import java.io.{File, PrintWriter}
 import java.text.MessageFormat.format
 
-import parser.Playlist
+import com.ericdaugherty.itunesexport.parser.Playlist
+
 
 /**
  * Formats a given playlist as an m3u playlist file.
@@ -20,7 +21,7 @@ class M3UExtFormatter(settings: FormatterSettings) extends Formatter(settings) {
   def writePlaylist(playlist: Playlist) {
     // Write out each track using a PrintWriter
     val extension = if(settings.useM3U8) ".m3u8" else ".m3u"
-    withPrintWriter(new File(settings.outputDirectory, parseFileName(playlist) + extension), settings) { writer =>
+    withPrintWriter(new File(settings.outputDirectory, parseFileName(playlist) + extension), settings) { writer : PrintWriter =>
       writer.println("#EXTM3U")
 
       filterTracks(playlist.tracks, settings).foreach(track => {
