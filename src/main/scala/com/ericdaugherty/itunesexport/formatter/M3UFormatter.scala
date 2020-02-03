@@ -2,7 +2,9 @@ package com.ericdaugherty.itunesexport.formatter
 
 import java.io.File
 import java.text.MessageFormat
-import parser.Playlist
+
+import com.ericdaugherty.itunesexport.Version
+import com.ericdaugherty.itunesexport.parser.Playlist
 
 /**
  * Formats a given playlist as an m3u playlist file

@@ -1,11 +1,12 @@
 package com.ericdaugherty.itunesexport.formatter
 
-import java.io.{FileInputStream, FileOutputStream, PrintWriter, File}
+import java.io.{File, FileInputStream, FileOutputStream, PrintWriter}
 import java.nio.channels.FileChannel
-import parser.{Track, Playlist}
+
 import Formatter._
 import java.net.URLDecoder
 
+import com.ericdaugherty.itunesexport.parser.{Playlist, Track}
 
 object Formatter {
 
@@ -20,7 +21,7 @@ object Formatter {
       else location).replace('/', File.separatorChar)
     )
   }
-  
+
   /**
    *  Performs a URL Decode to convert %xx into characters.  Many of these are illegal on many file systems
    * but they are all here for completeness and to handle any systems that do have them as legal characters
@@ -92,13 +93,18 @@ abstract class Formatter(settings: FormatterSettings) {
     // Exclude songs that are disabled (unchecked) unless the includeUnchecked override is set.
     if(settings.includeDisabled || !track.disabled)
     {
-      // Based on the file type determine if this song should be included.
-      settings.fileType match {
-//        case "MP3" => track.fileType == "MPEG audio file" || track.fileType == "MPEG-Audiodatei"
-        case "MP3" => track.location.substring(track.location.length -4 ) == ".mp3"
-        case "MP3M4A" => !track.protectedTrack
-        case "ALL" => true
-        case _ => true
+      if (track.location == null || track.location.isEmpty) {
+        println("Track does not have location. Skipping: " + track.toString)
+        false
+      } else {
+        // Based on the file type determine if this song should be included.
+        settings.fileType match {
+          //        case "MP3" => track.fileType == "MPEG audio file" || track.fileType == "MPEG-Audiodatei"
+          case "MP3" => track.location.substring(track.location.length - 4) == ".mp3"
+          case "MP3M4A" => !track.protectedTrack
+          case "ALL" => true
+          case _ => true
+        }
       }
     }
     else false

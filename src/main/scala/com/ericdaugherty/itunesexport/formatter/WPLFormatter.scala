@@ -3,7 +3,7 @@ package com.ericdaugherty.itunesexport.formatter
 import java.io.{File, PrintWriter}
 import java.text.MessageFormat
 
-import parser.{Track, Playlist}
+import com.ericdaugherty.itunesexport.parser.{Track, Playlist}
 
 /**
  * Formats a given playlist as an WPL playlist used by Windows Media Player.
