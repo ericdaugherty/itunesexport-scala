@@ -15,3 +15,7 @@ jobs:
         java-version: 1.8
     - name: Compile and Package
       run: mvn -B package --file pom.xml
+    - uses: actions/upload-artifact@v1
+      with:
+        name: jar-with-dependencies.jar
+        path: /home/runner/work/itunesexport-scala/itunesexport-scala/target/itunesexport-*-jar-with-dependencies.jar
