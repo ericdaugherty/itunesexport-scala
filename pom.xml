@@ -3,7 +3,7 @@
   <groupId>com.ericdaugherty</groupId>
   <artifactId>itunesexport</artifactId>
   <packaging>jar</packaging>
-  <version>2.2.3-SNAPSHOT</version>
+  <version>2.2.3</version>
   <inceptionYear>2009</inceptionYear>
   <properties>
     <scala.version>2.10.2</scala.version>

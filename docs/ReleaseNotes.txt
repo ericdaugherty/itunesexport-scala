@@ -5,6 +5,11 @@ http://www.ericdaugherty.com/dev/itunesexport/
 
 Revision History
 ----------------
+2.2.3 - Release 2/11/2020
+
+Fixed StringIndexOutOfBoundsException for tracks without location.
+Updated to Scala 2.10.2
+Thanks to: https://github.com/schnatterer for these fixes.
 
 2.2.2 - Released 6/1/2010
 
