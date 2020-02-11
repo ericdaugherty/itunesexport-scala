@@ -17,5 +17,5 @@ jobs:
       run: mvn -B package --file pom.xml
     - uses: actions/upload-artifact@v1
       with:
-        name: jar-with-dependencies.jar
-        path: /home/runner/work/itunesexport-scala/itunesexport-scala/target/itunesexport-2.2.3-SNAPSHOT-jar-with-dependencies.jar
+        name: iTunesExport-Scala-Artifacts
+        path: /home/runner/work/itunesexport-scala/itunesexport-scala/target/
