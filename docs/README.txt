@@ -3,6 +3,8 @@ http://www.ericdaugherty.com/dev/itunesexport/
 
 Usage
 
+iTunes Export only works Java v15 or earlier. 
+
 iTunes Export is a command line application that uses the Java Runtime 
 Environment (JRE) to execute.  To use it, open a command window to the 
 directory where iTunes Export is installed and execute the following command:
